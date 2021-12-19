@@ -82,7 +82,7 @@
 </div>
 
 {#if showInfo}
-    <div class="absolute top-0 left-0 flex w-full h-full">
+    <div class="absolute top-0 left-0 flex w-full h-full z-50">
         <button class="w-2/3 h-full bg-transparent" on:click={() => showInfo = false}></button>
         <div
             class="w-1/3 h-full bg-gun-bare shadow-left py-8 px-4"
@@ -97,7 +97,7 @@
                 />
                 <div class="py-2">
                     <p in:fly={{ delay: 350, duration: 300, x: 100, }} class="text-lg font-semibold text-white">
-                        Signed in as <span class="italic text-indigo-300">{activeUser.name}</span>
+                        Signed in as <span class="italic text-sky-500">{activeUser.name}</span>
                     </p>
                     <p in:fly={{ delay: 380, duration: 300, x: 100, }} class="text-sm text-gray-500">
                         First joined {moment(new Date(activeUser.created_on)).fromNow()}
