@@ -1,27 +1,7 @@
 <script>
     import { Jellyfish } from 'svelte-loading-spinners'
-
-    import { onMount } from "svelte";
-    import { page } from '$app/stores'
-
-    import {authorizeCode, setToken} from "$lib/http/auth.js";
-
-    const code = $page.query.get('code');
-
-    onMount(() => {
-        if (code) {
-            authorizeCode(code)
-                .then((token) => {
-                    console.log(token);
-                    setToken(token);
-                    window.location.href = "/"
-                })
-                .catch(() => window.location.href = "/");
-        } else {
-            window.location.href = "/";
-        }
-    })
 </script>
+
 
 <div class="flex flex-col justify-center items-center w-full pt-64">
     <Jellyfish size="128" color="#0EA5E9" unit="px" duration="2s"/>
