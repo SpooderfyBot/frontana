@@ -4,14 +4,10 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Spooderfy</title>
 		%svelte.head%
-		<script>
-			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				document.documentElement.classList.add('dark');
-			}
-		</script>
 	</head>
-	<body class="text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-50">
+	<body class="bg-white bg-neutral-900 text-gray-50">
 		<div id="svelte">%svelte.body%</div>
 	</body>
 </html>
