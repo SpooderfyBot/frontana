@@ -1,0 +1,121 @@
+<script>
+    import moment from "moment";
+    import { SyncLoader } from 'svelte-loading-spinners'
+
+    import {onMount} from "svelte";
+    import { page } from '$app/stores'
+    import {fade, fly} from 'svelte/transition';
+
+    import Notifications from "$lib/components/notifications/Notifications.svelte";
+    import {exchangeCode, logout, loginURL, token, user, fetchUser} from "$lib/http/auth.js";
+
+    onMount(async () => {
+        token.set(localStorage.getItem("session") || null);
+
+        if ($token != null) {
+            const u = await fetchUser($token);
+            user.set(u);
+            return;
+        }
+
+        if ($page.path !== "/profile/authorized") {
+            return
+        }
+
+        let code = $page.query.get("code");
+
+        if (code == null) {
+            window.location.href = "/";
+            return;
+        }
+
+        const t = await exchangeCode(code);
+        token.set(t);
+
+        const u = await fetchUser($token);
+        user.set(u);
+
+        window.location.href = "/";
+    })
+
+    let showInfo = false;
+    let activeUser = undefined;
+
+    user.subscribe(value => {
+        console.log(activeUser);
+        activeUser = value;
+    })
+
+    const onLogout = async () => {
+        activeUser = undefined;
+
+        await logout();
+
+        window.location.href = "/";
+    }
+</script>
+
+
+<div class="relative flex items-center justify-center h-10 w-48">
+    {#if activeUser === undefined}
+        <div in:fade={{ delay: 100, duration: 200 }} out:fade={{ duration: 100 }}>
+            <SyncLoader size="24" color="#0EA5E9" unit="px" duration="1s"/>
+        </div>
+    {:else if activeUser === null}
+        <a class="absolute" href={loginURL} in:fade={{ delay: 100, duration: 200 }} out:fade={{ duration: 100 }}>
+            <img class="inline-block w-5 h-5 mr-1" src="/icons/discord/logo-white.svg" alt=""/>
+            <span class="decoration-sky-500 decoration-2 underline-offset-2 underline">Login</span>
+        </a>
+    {:else}
+        <button
+            class="absolute flex items-center"
+            on:click={() => showInfo = true}
+            in:fade={{ delay: 100, duration: 200 }}
+            out:fade={{ duration: 100 }}
+        >
+            <img class="w-8 h-8 rounded-full" src={activeUser.picture} alt="Profile"/>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    {/if}
+</div>
+
+{#if showInfo}
+    <div class="absolute top-0 left-0 flex w-full h-full">
+        <button class="w-2/3 h-full bg-transparent" on:click={() => showInfo = false}></button>
+        <div
+            class="w-1/3 h-full bg-gun-bare shadow-left py-8 px-4"
+            in:fly={{ delay: 100, duration: 300, x: 100, }}
+            out:fly={{ delay: 150, duration: 100,  x: 100, }}
+        >
+            <div class="flex pb-6 px-4 border-b border-gray-600">
+                <img
+                    class="w-16 h-16 rounded-full mr-4"
+                    src={activeUser.picture}
+                    alt=""
+                />
+                <div class="py-2">
+                    <p in:fly={{ delay: 350, duration: 300, x: 100, }} class="text-lg font-semibold text-white">
+                        Signed in as <span class="italic text-indigo-300">{activeUser.name}</span>
+                    </p>
+                    <p in:fly={{ delay: 380, duration: 300, x: 100, }} class="text-sm text-gray-500">
+                        First joined {moment(new Date(activeUser.created_on)).fromNow()}
+                    </p>
+                </div>
+            </div>
+            <div class="py-4">
+                <Notifications/>
+            </div>
+        </div>
+    </div>
+{/if}
+
+
+<style>
+    .shadow-left {
+        box-shadow: -2px 0px 2px -1px rgba(0,0,0,0.75);
+        -webkit-box-shadow: -2px 0px 2px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: -2px 0px 2px -1px rgba(0,0,0,0.75);
+    }
+</style>

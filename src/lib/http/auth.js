@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import {onMount} from "svelte";
 import axios from "axios";
 
 export const token = writable();
