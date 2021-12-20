@@ -92,7 +92,7 @@
     <div class="absolute top-0 left-0 flex w-full h-full z-50">
         <button class="w-2/3 h-full bg-transparent" on:click={() => showInfo = false}></button>
         <div
-            class="w-1/3 h-full bg-gun-bare shadow-left py-8 px-4"
+            class="w-1/3 h-full bg-neutral-900 shadow-left py-8 px-4"
             in:fly={{ delay: 100, duration: 300, x: 100, }}
             out:fly={{ delay: 150, duration: 100,  x: 100, }}
         >

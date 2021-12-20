@@ -9,7 +9,7 @@
     export let reverse = false;
 </script>
 
-<div on:click={() => {state = !state; dispatch('click')}} class="cursor-pointer flex {reverse ? 'flex-row-reverse' : ''} items-center">
+<div on:click={() => {state = !state; dispatch('click')}} class="cursor-pointer flex {reverse ? 'flex-row-reverse' : ''} {state ? 'text-gray-300' : 'text-gray-500'} hover:text-gray-400 items-center">
     <div class="transition duration-150 flex flex-col justify-center items-center rounded-md border-2 {state ? 'border-green-400' : 'border-red-400'} w-6 h-6 px-1">
         {#if state}
             <svg in:fade={{ delay: 100, duration: 200 }} xmlns="http://www.w3.org/2000/svg" class="text-green-400 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +23,7 @@
         {/if}
     </div>
     {#if label}
-        <p class="text-gray-400 {reverse ? 'mr-2' : 'ml-2'} pb-1">{label}</p>
+        <p class="{reverse ? 'mr-2' : 'ml-2'} pb-1">{label}</p>
     {/if}
 </div>
 

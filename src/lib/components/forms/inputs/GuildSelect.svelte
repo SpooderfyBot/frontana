@@ -21,8 +21,7 @@
     });
 
     function handleSelect(event) {
-        console.log('selected item', event.detail);
-        // .. do something here 🙂
+        guild = event.detail;
     }
 </script>
 
@@ -34,9 +33,10 @@
             items={$guilds}
             isWaiting={$guilds == null}
             listPlacement="bottom"
-            noOptionsMessage="You don't control any servers."
+            noOptionsMessage={$guilds ? "No servers matched that search." : "You don't control any servers."}
             placeholder="Maybe link a server to enjoy the stream with."
             on:select={handleSelect}
+            on:clear={() => guild = null}
             {Item}
             {Selection}
     />

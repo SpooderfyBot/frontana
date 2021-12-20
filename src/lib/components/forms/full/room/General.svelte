@@ -5,6 +5,7 @@
     export let roomTitle = '';
     export let roomTopic = '';
     export let roomBanner = '';
+    export let roomGuild = null;
 </script>
 
 <div class="flex items-center pt-3 pb-2">
@@ -33,7 +34,7 @@
             </p>
         </TextInput>
         <div class="transition duration-200 w-full border-2 border-gray-800 hover:border-gray-700 rounded-lg mt-8">
-            <GuildSelect/>
+            <GuildSelect bind:guild={roomGuild}/>
         </div>
     </div>
     <div class="w-full space-y-8">

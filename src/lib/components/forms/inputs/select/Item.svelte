@@ -1,7 +1,5 @@
 <script>
     export let item = undefined;
-
-    console.log(item)
 </script>
 
 <div class="flex items-center cursor-pointer text-gray-400 hover:text-gray-100 px-2 py-1.5">
