@@ -40,7 +40,7 @@
         <TextInput
             bind:value={roomTopic}
             valid={roomTopic.length <= 48}
-            title="Room banner"
+            title="Room topic"
             placeholder="Maybe add a room topic..."
         >
             <p class="transition text-xs text-red-400">
@@ -50,7 +50,7 @@
         <TextInput
             bind:value={roomBanner}
             valid={roomBanner === '' || roomBanner.match(/https:\/\/i\.imgur\.com\/[0-9a-z]+\.jpeg|https:\/\/i\.imgur\.com\/[0-9a-z]+\.png|https:\/\/i\.imgur\.com\/[0-9a-z]+\.webp/)}
-            title="Room topic"
+            title="Room banner"
             placeholder="Maybe add a imgur banner link for your room..."
         >
             <p class="transition text-xs text-red-400">
