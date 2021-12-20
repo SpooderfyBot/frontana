@@ -9,7 +9,7 @@
 
 <Nav />
 <PageTransition refresh={key}>
-	<div class="">
+	<div class="flex flex-col items-center w-full h-full">
 		<slot />
 	</div>
 </PageTransition>

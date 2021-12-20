@@ -15,17 +15,24 @@
         if ($token != null) {
             const u = await fetchUser($token);
             user.set(u);
+
+
+            if ($page.path === "/auth/authorized") {
+                window.location.replace("/");
+                return
+            }
+
             return;
         }
 
-        if ($page.path !== "/profile/authorized") {
+        if ($page.path !== "/auth/authorized") {
             return
         }
 
         let code = $page.query.get("code");
 
         if (code == null) {
-            window.location.href = "/";
+            window.location.replace("/");
             return;
         }
 
@@ -35,7 +42,7 @@
         const u = await fetchUser($token);
         user.set(u);
 
-        window.location.href = "/";
+        window.location.replace("/");
     })
 
     let showInfo = false;
@@ -105,6 +112,9 @@
                 </div>
             </div>
             <div class="py-4">
+                <div class="text-sm flex justify-end w-full pb-4 px-8">
+                    <button class="text-red-500" on:click={onLogout}>Logout</button>
+                </div>
                 <Notifications/>
             </div>
         </div>
