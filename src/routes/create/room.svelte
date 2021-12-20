@@ -6,6 +6,8 @@
     import EnsureLogin from "$lib/utils/EnsureLogin.svelte";
     import {getCurrentRoom} from "$lib/http/rooms.js";
     import {token} from "$lib/http/auth.js";
+    import TextInput from "$lib/components/forms/inputs/TextInput.svelte";
+    import CreateRoom from "$lib/components/forms/full/CreateRoom.svelte";
 
     let pendingPromise = new Promise(resolve => {});
 
@@ -22,11 +24,10 @@
     onMount(() => {
         pendingPromise = checkRoomRunning();
     })
-
 </script>
 
 <EnsureLogin/>
-<div class="flex flex-col rounded-lg bg-gun-bare shadow-md p-4 w-1/2 h-full mt-16">
+<div class="flex flex-col rounded-lg bg-gun-bare shadow-md p-4 w-3/5 h-full mt-16">
     <div class="border-b border-indigo-700 w-full pb-2 px-2">
         <h2 class="text-lg text-gray-300 font-bold">Create room</h2>
     </div>
@@ -42,8 +43,8 @@
                     <p>You can join your room by <a href="/rooms/{existing.id}">clicking here</a></p>
                 </div>
             {:else}
-                <div class="w-full h-64">
-
+                <div class="transition transition-all duration-150 w-full">
+                    <CreateRoom/>
                 </div>
             {/if}
         {/await}
