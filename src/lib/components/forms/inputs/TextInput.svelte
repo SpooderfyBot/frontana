@@ -1,5 +1,8 @@
 <script>
+    import {createEventDispatcher} from "svelte";
     import {fade} from "svelte/transition";
+
+    const dispatch = createEventDispatcher();
 
     export let title;
     export let placeholder;
@@ -7,10 +10,14 @@
     export let valid = true;
 
     export let value = '';
+
+    const onChange = () => dispatch('change');
 </script>
 
+<!-- Required due to how values are updated --->
 <div class="relative w-full">
     <input bind:value={value}
+           on:keydown={() => setTimeout(onChange, 100)}
            type="text"
            class="transition rounded-md border-2 border-gray-800 hover:border-gray-700 focus:border-gray-700 bg-transparent outline-none focus:outline-none w-full p-2"
            placeholder={placeholder}

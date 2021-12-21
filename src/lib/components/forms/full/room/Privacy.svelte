@@ -1,19 +1,28 @@
 <script>
+    import {createEventDispatcher} from "svelte";
     import CheckBox from "$lib/components/forms/inputs/CheckBox.svelte";
+
+    const dispatch = createEventDispatcher();
 
     export let roomPublic = false;
     export let roomInviteOnly = false;
+
+    const onChange = () => dispatch('change');
 
     const publicClick = () => {
         if (roomInviteOnly) {
             roomInviteOnly = false;
         }
+
+        onChange();
     }
 
     const inviteToggle = () => {
         if (roomPublic) {
             roomPublic = false;
         }
+
+        onChange();
     }
 </script>
 

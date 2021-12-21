@@ -1,11 +1,17 @@
 <script>
+    import {createEventDispatcher} from "svelte";
+
     import TextInput from "$lib/components/forms/inputs/TextInput.svelte";
     import GuildSelect from "$lib/components/forms/inputs/GuildSelect.svelte";
+
+    const dispatch = createEventDispatcher();
 
     export let roomTitle = '';
     export let roomTopic = '';
     export let roomBanner = '';
     export let roomGuild = null;
+
+    const onChange = () => dispatch('change');
 </script>
 
 <div class="flex items-center pt-3 pb-2">
@@ -20,6 +26,7 @@
     <div class="w-full xl:w-4/5">
         <TextInput
                 bind:value={roomTitle}
+                on:change={onChange}
                 valid={(roomTitle.length >= 2) && (roomTitle.length <= 32)}
                 title="Room name"
                 placeholder="Enter the room name..."
@@ -34,12 +41,13 @@
             </p>
         </TextInput>
         <div class="transition duration-200 w-full border-2 border-gray-800 hover:border-gray-700 rounded-lg mt-8">
-            <GuildSelect bind:guild={roomGuild}/>
+            <GuildSelect on:change={onChange} bind:guild={roomGuild}/>
         </div>
     </div>
     <div class="w-full space-y-8">
         <TextInput
             bind:value={roomTopic}
+            on:change={onChange}
             valid={roomTopic.length <= 48}
             title="Room topic"
             placeholder="Maybe add a room topic..."
@@ -50,6 +58,7 @@
         </TextInput>
         <TextInput
             bind:value={roomBanner}
+            on:change={onChange}
             valid={roomBanner === '' || roomBanner.match(/https:\/\/i\.imgur\.com\/[0-9a-z]+\.jpeg|https:\/\/i\.imgur\.com\/[0-9a-z]+\.png|https:\/\/i\.imgur\.com\/[0-9a-z]+\.webp/)}
             title="Room banner"
             placeholder="Maybe add a imgur banner link for your room..."

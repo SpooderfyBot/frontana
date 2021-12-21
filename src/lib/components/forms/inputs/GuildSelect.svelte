@@ -1,5 +1,5 @@
 <script>
-    import {onMount} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
     import Select from 'svelte-select';
     import {writable} from "svelte/store";
 
@@ -8,6 +8,8 @@
 
     import {getGuilds} from "$lib/http/guilds.js";
     import {token} from "$lib/http/auth.js";
+
+    const dispatch = createEventDispatcher();
 
     export let guild = null;
 
@@ -22,6 +24,8 @@
 
     function handleSelect(event) {
         guild = event.detail;
+
+        dispatch('change');
     }
 </script>
 
@@ -36,7 +40,10 @@
             noOptionsMessage={$guilds ? "No servers matched that search." : "You don't control any servers."}
             placeholder="Maybe link a server to enjoy the stream with."
             on:select={handleSelect}
-            on:clear={() => guild = null}
+            on:clear={() => {
+                guild = null;
+                dispatch('change');
+            }}
             {Item}
             {Selection}
     />
