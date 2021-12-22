@@ -14,7 +14,9 @@
             return;
         }
 
-        return await $authClient.get("/users/@me/rooms/current");
+        const {data} = await $authClient.get("/users/@me/rooms/current");
+        console.log(data)
+        return data
     }
 
     onMount(() => {
@@ -34,9 +36,12 @@
             </div>
         {:then existing}
             {#if existing != null}
-                <div class="text-center">
-                    <h3>Oops! You already have a room created that's active.</h3>
-                    <p>You can join your room by <a href="/rooms/{existing.id}">clicking here</a></p>
+                <div class="text-center mt-8">
+                    <h3 class="text-lg font-bold">Oops! You already have a room created that's active.</h3>
+                    <p class="text-gray-400 mt-3">You can join your room by clicking below.</p>
+                    <div class="pt-4">
+                        <a href="/rooms/{existing.id}" class="transition duration-200 cursor-pointer text-lg px-4 rounded-lg border border-indigo-700 hover:border-indigo-800 pb-2 pt-1 mt-4">Go to room</a>
+                    </div>
                 </div>
             {:else}
                 <CreateRoom/>
