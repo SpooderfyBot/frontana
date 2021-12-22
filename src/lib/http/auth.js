@@ -1,62 +1,66 @@
-import { writable } from "svelte/store";
 import axios from "axios";
+import {setupCache} from "axios-cache-adapter";
 
-export const token = writable();
-export const user = writable();
-export const error = writable();
+import {derived, writable} from "svelte/store";
+import {writable as persistentStore} from "svelte-local-storage-store";
 
 export const baseURL = "http://127.0.0.1:8000/api/v0";
 export const loginURL = "https://discord.com/api/oauth2/authorize?client_id=585225058683977750&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fauth%2Fauthorized&response_type=code&scope=identify%20guilds"
 
-token.subscribe(value => {
-    if (value === undefined || value === "undefined") {
-        return
-    }
+const cache = setupCache({
+   maxAge: 2500,
+   exclude: {
+       methods: ["delete"]
+   }
+});
 
-    if (value == null) {
-        user.set(null);
-        localStorage.removeItem("session");
-        return
-    }
+export const basicClient = axios.create({
+    baseURL,
+    adapter: cache.adapter,
+})
 
-    localStorage.setItem("session", value);
+export const token = persistentStore("session", null);
+export const authClient = writable();
+
+token.subscribe(token => {
+    const client = axios.create({
+        baseURL,
+        adapter: cache.adapter,
+        headers: { Authorization: `Bearer ${token}` }
+    })
+
+    authClient.set(client);
 })
 
 export const logout = async () => {
     let t;
     token.update(value => {
         t = value;
-        return null
-    });
-
-    await axios.post(
-        "/auth/revoke",
-        {},
-        { baseURL, params: { "token": t } },
-    );
-}
-
-export const fetchUser = async (t) => {
-    if (!t) {
         return null;
+    })
+
+    await basicClient.post("/auth/revoke", {}, {
+        params: { "token": t }
+    })
+}
+
+export const user = derived([token], ([$token], set) => {
+    if ($token == null) {
+        set(null);
+        return;
     }
 
-    try {
-        const { data } = await axios.get(
-            "/users/@me",
-            { baseURL, headers: { "Authorization": `Bearer ${t}` } },
-        );
-        return data;
-    } catch {
+    basicClient.get(
+        "/users/@me",
+        {
+            headers: {
+                "Authorization": `Bearer ${$token}`
+            }
+        }
+    ).then((r) => {
+        set(r.data);
+    }).catch(() => {
+        // We'll get re-triggered
         token.set(null);
-    }
-}
-
-export const exchangeCode = async (code) => {
-    const { data } = await axios.get(
-        "/auth/authorize",
-        { baseURL, params: {code} },
-    );
-
-    return data.access_token;
-}
+    })
+})

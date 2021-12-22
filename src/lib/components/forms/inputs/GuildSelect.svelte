@@ -6,8 +6,7 @@
     import Item from "$lib/components/forms/inputs/select/Item.svelte";
     import Selection from "$lib/components/forms/inputs/select/Selection.svelte";
 
-    import {getGuilds} from "$lib/http/guilds.js";
-    import {token} from "$lib/http/auth.js";
+    import {authClient} from "$lib/http/auth.js";
 
     const dispatch = createEventDispatcher();
 
@@ -16,9 +15,9 @@
     let loadedGuilds = false;
     let guilds = writable(null);
     onMount(async () => {
-        let g = await getGuilds($token);
+        const {data} = await $authClient.get("/users/@me/guilds");
 
-        guilds.set(g);
+        guilds.set(data);
         loadedGuilds = true;
     });
 

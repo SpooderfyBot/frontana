@@ -4,9 +4,7 @@
     import {fade} from "svelte/transition";
 
     import EnsureLogin from "$lib/utils/EnsureLogin.svelte";
-    import {getCurrentRoom} from "$lib/http/rooms.js";
-    import {token} from "$lib/http/auth.js";
-    import TextInput from "$lib/components/forms/inputs/TextInput.svelte";
+    import {authClient, token} from "$lib/http/auth.js";
     import CreateRoom from "$lib/components/forms/full/CreateRoom.svelte";
 
     let pendingPromise = new Promise(resolve => {});
@@ -16,9 +14,7 @@
             return;
         }
 
-        const existing = await getCurrentRoom($token);
-
-        return existing
+        return await $authClient.get("/users/@me/rooms/current");
     }
 
     onMount(() => {

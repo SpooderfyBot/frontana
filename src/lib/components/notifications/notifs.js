@@ -1,20 +1,18 @@
 import {writable} from "svelte/store";
-import {
-    getNotifications as getN,
-    removeNotification as removeN,
-} from "$lib/http/notifications.js";
 
 export const notifications = writable(null);
 export const error = writable();
 
 
-export const getNotifications = async (token) => {
-    const n = await getN(token);
-    console.log(n);
-    notifications.set(n);
+export const getNotifications = async (client) => {
+    const { data } = await client.get("/users/@me/notifications");
+    notifications.set(data);
 }
 
-export const removeNotification = async (id, token) => {
-    await removeN(id, token);
-    await getNotifications(token);
+export const removeNotification = async (id, client) => {
+    await client.delete(
+        "/users/@me/notifications",
+        { params: { id } }
+    );
+    await getNotifications(client);
 }

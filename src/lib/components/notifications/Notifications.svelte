@@ -3,13 +3,13 @@
     import {onMount} from "svelte";
     import {BarLoader} from "svelte-loading-spinners";
 
-    import {token} from "$lib/http/auth.js";
+    import {authClient} from "$lib/http/auth.js";
 
     import Notification from "./Notification.svelte";
     import {notifications, error, getNotifications} from "./notifs.js";
 
     onMount(async () => {
-        await getNotifications($token);
+        await getNotifications($authClient);
     })
 
     let userNotifications = null;

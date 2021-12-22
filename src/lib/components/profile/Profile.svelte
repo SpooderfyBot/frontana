@@ -7,16 +7,10 @@
     import {fade, fly} from 'svelte/transition';
 
     import Notifications from "$lib/components/notifications/Notifications.svelte";
-    import {exchangeCode, logout, loginURL, token, user, fetchUser} from "$lib/http/auth.js";
+    import {logout, loginURL, user, token, basicClient} from "$lib/http/auth.js";
 
     onMount(async () => {
-        token.set(localStorage.getItem("session") || null);
-
         if ($token != null) {
-            const u = await fetchUser($token);
-            user.set(u);
-
-
             if ($page.path === "/auth/authorized") {
                 window.location.replace("/");
                 return
@@ -36,11 +30,13 @@
             return;
         }
 
-        const t = await exchangeCode(code);
-        token.set(t);
-
-        const u = await fetchUser($token);
-        user.set(u);
+        const {data} = await basicClient.get(
+            "/auth/authorize",
+            {
+                params: {code}
+            }
+        );
+        token.set(data.access_token);
 
         window.location.replace("/");
     })
@@ -49,7 +45,6 @@
     let activeUser = undefined;
 
     user.subscribe(value => {
-        console.log(activeUser);
         activeUser = value;
     })
 

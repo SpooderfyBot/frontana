@@ -3,7 +3,7 @@
     import {fly} from 'svelte/transition';
 
     import DynamicIcon from "$lib/components/icons/DynamicIcon.svelte";
-    import {token} from "$lib/http/auth.js";
+    import {authClient} from "$lib/http/auth.js";
     import {notifications, removeNotification} from "$lib/components/notifications/notifs.js";
 
     export let notification;
@@ -36,7 +36,7 @@
 
     const close = async () => {
         notifications.update(value => value.filter(v => v._id !== notification._id));
-        await removeNotification(notification._id, $token);
+        await removeNotification(notification._id, $authClient);
     }
 </script>
 

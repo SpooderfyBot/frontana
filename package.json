@@ -25,7 +25,9 @@
 		"node": ">= 12.17.0"
 	},
 	"dependencies": {
+		"axios": "^0.24.0",
+		"axios-cache-adapter": "^2.7.3",
 		"moment": "^2.29.1",
-		"axios": "^0.24.0"
+		"svelte-local-storage-store": "^0.2.6"
 	}
 }
