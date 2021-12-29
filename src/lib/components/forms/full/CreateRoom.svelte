@@ -39,7 +39,7 @@
             }
         );
 
-        window.location.replace(`/room/${data.room_id}`)
+        window.location.replace(`/rooms/${data.room_id}`)
     }
 </script>
 
