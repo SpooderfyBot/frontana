@@ -15,7 +15,7 @@
 
     const isValid = () => (
         (roomTitle.length >= 2 && roomTitle.length <= 32)
-        && (roomTopic.length <= 48)
+        && ((roomTopic.length === 0) || (roomTopic.length >= 2 && roomTopic.length <= 128))
         && (roomBanner === '' || roomBanner.match(/https:\/\/i\.imgur\.com\/[0-9a-z]+\.jpeg|https:\/\/i\.imgur\.com\/[0-9a-z]+\.png|https:\/\/i\.imgur\.com\/[0-9a-z]+\.webp/))
     )
 
@@ -28,10 +28,10 @@
     let pendingSubmit = null;
     const submit = async () => {
         const {data} = await $authClient.post(
-            "/rooms/create",
+            "/rooms",
             {
                 title: roomTitle,
-                topic: roomTopic,
+                topic: roomTopic || null,
                 is_public: roomPublic,
                 invite_only: roomInviteOnly,
                 guild_id: roomGuild?.id || null,
@@ -39,7 +39,7 @@
             }
         );
 
-        window.location.replace(`/rooms/${data.room_id}`)
+        window.location.replace(`/rooms/${data.id}`)
     }
 </script>
 

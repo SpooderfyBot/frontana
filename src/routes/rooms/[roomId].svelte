@@ -6,8 +6,12 @@
     import { page } from '$app/stores'
     import {authClient, token, user} from "$lib/http/auth.js";
     import VideoPlayer from "$lib/components/player/VideoPlayer.svelte";
+    import Playlist from "$lib/components/room/Playlist.svelte";
+    import Settings from "$lib/components/room/Settings.svelte";
+    import Chat from "$lib/components/room/Chat.svelte";
 
     const roomId = $page.params.roomId;
+    const imageServer = "http://127.0.0.1:7070/images/banners"
 
     let targetNavPage = 1;
     let playlist = []
@@ -19,7 +23,7 @@
         }
 
         const {data} = await $authClient.get(
-            "/rooms/info",
+            "/rooms",
             {
                 params: { id: roomId }
             }
@@ -40,8 +44,16 @@
             <Jellyfish size="128" color="#0EA5E9" unit="px" duration="2s"/>
         </div>
     {:then room}
-        <div in:fade={{ delay: 100, duration: 200 }} class="border-b border-indigo-700 w-full pt-16 px-8 pb-2">
-            <h3 class="text-2xl font-bold text-gray-100">{ room.title }</h3>
+        <div in:fade={{ delay: 100, duration: 200 }} class="flex items-center border-b border-indigo-700 w-full pt-16 px-8 pb-2">
+            {#if room.banner != null}
+                <img class="clip-img object-cover w-48 h-24" src="{imageServer}/{room.banner}?preset=original" alt="">
+            {/if}
+            <div class="transform {room.banner ? '-translate-x-2' : 'translate-x-0'} flex flex-col">
+                <h3 class="text-2xl font-bold text-gray-200">{ room.title }</h3>
+                {#if room.topic}
+                    <p class="text-gray-500 text-normal italic">{ room.topic }</p>
+                {/if}
+            </div>
         </div>
         <div class="flex justify-center w-full p-4">
             <div class="pb-4 pr-4 w-2/3 min-h-[24rem]">
@@ -73,19 +85,21 @@
                         </svg>
                     </button>
                 </div>
-                <div class="flex flex-col overflow-y-auto h-full w-full">
-                    <div class="flex">
-                        <!-- LOL this is a hack -->
-                        <div class="flex flex-col items-center justify-start">
-                            <img class="w-12 h-12 rounded-full" src={$user.picture} alt=""/>
-                        </div>
-                        <div class="flex flex-col pl-2 pt-0.5">
-                            <p class="text-sm font-semibold">{$user.name}</p>
-                            <p class="text-sm text-gray-400">Hello World!</p>
-                        </div>
-                    </div>
-                </div>
+
+                {#if targetNavPage === 1}
+                    <Chat/>
+                {:else if targetNavPage === 2}
+                    <Playlist/>
+                {:else}
+                    <Settings/>
+                {/if}
             </div>
         </div>
     {/await}
 </div>
+
+<style>
+    .clip-img {
+        clip-path: polygon(-12px -13px, 104.43% -6px, 45.83% 109.37%, -15px 102px);
+    }
+</style>

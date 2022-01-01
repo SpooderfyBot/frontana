@@ -4,8 +4,13 @@ import {setupCache} from "axios-cache-adapter";
 import {derived, writable} from "svelte/store";
 import {writable as persistentStore} from "svelte-local-storage-store";
 
+export const discordCdn = "https://cdn.discordapp.com"
 export const baseURL = "http://127.0.0.1:8000/api/v0";
 export const loginURL = "https://discord.com/api/oauth2/authorize?client_id=585225058683977750&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2Fauth%2Fauthorized&response_type=code&scope=identify%20guilds"
+
+const intoAvatar = (id, hashed) => {
+    return `${discordCdn}/avatars/${id}/${hashed}.png?size=128`
+}
 
 const cache = setupCache({
    maxAge: 2500,
@@ -58,7 +63,11 @@ export const user = derived([token], ([$token], set) => {
             }
         }
     ).then((r) => {
-        set(r.data);
+        let user = r.data;
+
+        user.avatar = user.avatar ? intoAvatar(user.id, user.avatar) : user.avatar
+
+        set(user);
     }).catch(() => {
         // We'll get re-triggered
         token.set(null);

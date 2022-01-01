@@ -35,14 +35,16 @@
     }
 
     const close = async () => {
-        notifications.update(value => value.filter(v => v._id !== notification._id));
-        await removeNotification(notification._id, $authClient);
+        const notifId = notification.id;
+        await removeNotification(notifId, $authClient);
+        const newNotifications = $notifications.filter(v => v.id !== notifId);
+        notifications.set(newNotifications);
     }
 </script>
 
 
 <div
-    id={notification._id}
+    id={notification.id}
     class="flex justify-between items-center {canExpand ? 'cursor-pointer' : 'cursor-default'} border-b border-gray-700 pb-2 w-full"
     on:click={expandNotification}
     in:fly={{ delay: 100, duration: 300, x: 100, }}

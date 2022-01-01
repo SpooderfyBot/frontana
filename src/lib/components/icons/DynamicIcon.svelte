@@ -16,5 +16,5 @@
 {:else if icon === "issues"}
     <img class={classInfo} src="/icons/issues.png" alt=""/>
 {:else if icon === "discord"}
-    <img class={classInfo} src="/icons/discord/logo-white.svg" alt=""/>
+    <img class="w-6 h-6 mt-1" src="/icons/discord/logo-white.svg" alt=""/>
 {/if}

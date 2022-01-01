@@ -36,6 +36,8 @@
                 params: {code}
             }
         );
+
+        console.log(data);
         token.set(data.access_token);
 
         window.location.replace("/");
@@ -75,7 +77,7 @@
             in:fade={{ delay: 100, duration: 200 }}
             out:fade={{ duration: 100 }}
         >
-            <img class="w-8 h-8 rounded-full" src={activeUser.picture} alt="Profile"/>
+            <img class="w-8 h-8 rounded-full" src={activeUser.avatar} alt="Profile"/>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
@@ -94,15 +96,15 @@
             <div class="flex pb-6 px-4 border-b border-gray-600">
                 <img
                     class="w-16 h-16 rounded-full mr-4"
-                    src={activeUser.picture}
+                    src={activeUser.avatar}
                     alt=""
                 />
                 <div class="py-2">
                     <p in:fly={{ delay: 350, duration: 300, x: 100, }} class="text-lg font-semibold text-white">
-                        Signed in as <span class="italic text-sky-500">{activeUser.name}</span>
+                        Signed in as <span class="italic text-sky-500">{activeUser.username}</span>
                     </p>
                     <p in:fly={{ delay: 380, duration: 300, x: 100, }} class="text-sm text-gray-500">
-                        First joined {moment(new Date(activeUser.created_on)).fromNow()}
+                        Last updated {moment(new Date(activeUser.updated_on)).fromNow()}
                     </p>
                 </div>
             </div>

@@ -48,7 +48,7 @@
         <TextInput
             bind:value={roomTopic}
             on:change={onChange}
-            valid={roomTopic.length <= 48}
+            valid={(roomTopic.length === 0) || (roomTopic.length >= 2 && roomTopic.length <= 128)}
             title="Room topic"
             placeholder="Maybe add a room topic..."
         >
